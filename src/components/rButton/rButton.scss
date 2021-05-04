@@ -1,0 +1,37 @@
+.rbutton {
+    border: none;
+    outline: none;
+    padding: 15px;
+    border-radius: 4px;
+    color: #616161;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: all .3s;
+
+    &.active {
+        background-color: white;
+        box-shadow: 1px 1px 2px #e0e0e0;
+        &:hover {
+            background-color: white;
+        }
+    }
+    &:hover {
+        background-color: #fafafa70;
+    }
+
+    i {
+        padding-right: 10px;
+        display: flex;
+        img {
+            width: 18px;
+            height: 18px;
+        }
+    }
+    
+    span {
+        font-size: 18px;
+    }
+
+}
