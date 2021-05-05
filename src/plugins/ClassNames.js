@@ -1,4 +1,4 @@
-const setClass = (classes) => {
+export default (classes) => {
   if (!Array.isArray(classes)) {
     classes = [classes]
   }
@@ -21,5 +21,4 @@ const setClass = (classes) => {
     console.warn('Failed to perform classes conversion:', classes)
     return classes
   }
-}
-export default setClass;
+};
