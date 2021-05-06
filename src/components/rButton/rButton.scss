@@ -26,4 +26,11 @@
         padding-left: 10px;
     }
 
+    &.filled {
+        color: white;
+    }
+
+    &.center {
+        justify-content: center;
+    }
 }
