@@ -1,4 +1,4 @@
-export default (classes) => {
+export default function setClasses (classes) {
   if (!Array.isArray(classes)) {
     classes = [classes]
   }
