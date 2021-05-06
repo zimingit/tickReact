@@ -6,7 +6,7 @@ import setClass from '../../plugins/ClassNames.js'
 import './ListItem.scss';
 import deleteIcon from '../../assets/icons/delete.svg';
 
-const ListItem = ({label, color, selected}) => {
+const ListItem = ({label, color, selected, handleDelFolder}) => {
   // const testMultiClasses = setClass([
   //   ['arrayFirstClass', 'arraySecondClass'],
   //   [],
@@ -25,7 +25,7 @@ const ListItem = ({label, color, selected}) => {
       <Badge color={color}/>
       <span>{label}</span>
       <div className="list_delete">
-        <Button icon={deleteIcon}/>
+        <Button icon={deleteIcon} onClick={() => handleDelFolder(label)}/>
       </div>  
     </li>
   );
