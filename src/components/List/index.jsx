@@ -7,11 +7,8 @@ const List = ({data = [], handleDelFolder}) => {
   return (
     <ul className="sidebar__list">
       { data.map(({label, color, selected}) => (
-      <ListItem label={label}
-                color={color}
-                selected={selected}
-                key={label}
-                handleDelFolder={handleDelFolder} />
+      <ListItem {...{label, color, selected, handleDelFolder}}
+                key={label}/>
       )) }
     </ul>
   );
