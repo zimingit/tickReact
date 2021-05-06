@@ -1,6 +1,8 @@
-.badge {
-    display: block;
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
+i {
+    &.badge {
+        display: block;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+    }
 }
