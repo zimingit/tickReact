@@ -1,8 +1,10 @@
 import React from 'react';
 import Badge from '../Badge'
+import Button from '../rButton';
 import setClass from '../../plugins/ClassNames.js'
 
 import './ListItem.scss';
+import deleteIcon from '../../assets/icons/delete.svg';
 
 const ListItem = ({label, color, selected}) => {
   // const testMultiClasses = setClass([
@@ -22,6 +24,9 @@ const ListItem = ({label, color, selected}) => {
     <li className={classes}>
       <Badge color={color}/>
       <span>{label}</span>
+      <div className="list_delete">
+        <Button icon={deleteIcon}/>
+      </div>  
     </li>
   );
 }

@@ -1,12 +1,11 @@
 .list__item {
   display: flex;
   align-items: center;
-  padding: 15px;
   border-radius: 4px;
+  padding-left: 15px;
   color: #616161;
   cursor: pointer;
   transition: all .3s;
-  font-size: 18px;
   
   &.active {
     background-color: white;
@@ -18,9 +17,23 @@
 
   &:hover {
     background-color: #fafafa70;
+
+    .list_delete {
+      opacity: .15;
+      &:hover {
+        opacity: .7;
+      }
+    }
   }
 
   span {
     padding-left: 15px;
+    font-size: 18px;
+  }
+
+  .list_delete {
+    margin-left: auto;
+    opacity: 0;
+    transition: opacity .2s ease;
   }
 }
