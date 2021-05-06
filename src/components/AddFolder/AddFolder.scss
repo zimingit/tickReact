@@ -14,22 +14,6 @@
     min-width: 280px;
     box-shadow: 2px 2px 6px #e0e0e0;
   
-    .popup__input {
-      outline: none;
-      border-radius: 5px;
-      border: 1px solid #e0e0e0;
-      padding: 10px;
-      color: #757575;
-      
-      &:focus {
-        border: 1px solid #80cbc4;
-      }
-  
-      &::placeholder {
-        color: #e0e0e0;
-      }
-    }
-  
     .popup__close {
       position: absolute;
       top: -10px;

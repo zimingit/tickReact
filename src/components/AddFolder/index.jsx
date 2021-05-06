@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Button from '../rButton';
+import Input from '../FormWidgets/Input'
 import ListBadges from '../ListBadges';
 
 import addIcon from '../../assets/icons/add.svg';
@@ -7,18 +8,15 @@ import closeIcon from '../../assets/icons/close.svg';
 import './AddFolder.scss'
 
 const AddFolder = ({handleAddFolder}) => {
-  const [state, setState] = useState({
-    selectedColor: '#e57373',
-    showPopup: false,
-    folderName: ''
-  })
-  const setSelected = (color) => (setState({...state, 'selectedColor': color}))
-  const showPopup = () => (setState({...state, 'showPopup': true}))
-  const closePopup = () => (setState({...state, 'showPopup': false}))
-  const setName = (name) => (setState({...state, 'folderName': name}))
+  const [color, setColor] = useState('#e57373');
+  const [viewPopup, setViewPopup] = useState(false);
+  const [folderName, setFolderName] = useState('');
+
+  const showPopup = () => (setViewPopup(true))
+  const closePopup = () => (setViewPopup(false))
   const addFolder = () => {
-    handleAddFolder(state.folderName, state.selectedColor)
-    setName('')
+    handleAddFolder(folderName, color)
+    setFolderName('')
     closePopup()
   }
 
@@ -30,18 +28,18 @@ const AddFolder = ({handleAddFolder}) => {
                 Добавить папку
       </Button>
 
-      {state.showPopup && 
+      {viewPopup && 
         <div className="addFolder__popup">
 
-          <input placeholder="Название папки"
-                 className="popup__input"
-                 style={{borderColor: state.selectedColor}}
-                 onChange={e => setName(e.target.value)}/>
+          <Input  value={folderName}
+                  onInput={setFolderName}
+                  placeholder="Название папки"
+                  style={{borderColor: color}}/>
 
-          <ListBadges handleSelect={setSelected}/>
+          <ListBadges handleSelect={setColor}/>
 
           <Button className="filled center"
-                  style={{backgroundColor: state.selectedColor}}
+                  style={{backgroundColor: color}}
                   onClick={addFolder}>
                     Добавить
           </Button>
