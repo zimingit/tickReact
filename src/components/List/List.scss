@@ -3,4 +3,17 @@
   list-style-type: none;
   display: flex;
   flex-direction: column;
+  overflow: auto;
+  
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #e0e0e0;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #bdbdbd;
+  }
 }
