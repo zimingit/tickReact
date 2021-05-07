@@ -8,16 +8,26 @@ import closeIcon from '../../assets/icons/close.svg';
 import './AddFolder.scss'
 
 const AddFolder = ({handleAddFolder}) => {
-  const [color, setColor] = useState('#e57373');
+  const initColor = '#e57373'
+  const [color, setColor] = useState(initColor);
   const [viewPopup, setViewPopup] = useState(false);
   const [folderName, setFolderName] = useState('');
 
-  const showPopup = () => (setViewPopup(true))
-  const closePopup = () => (setViewPopup(false))
-  const addFolder = () => {
-    handleAddFolder(folderName, color)
+  const showPopup = () => setViewPopup(true)
+  const closePopup = () => {
+    setViewPopup(false)
+    resetData()
+  }
+  const resetData = () => {
     setFolderName('')
+    setColor(initColor)
+  }
+  const handleKeyUp = (e) => { if (e.key === 'Enter') addFolder() }
+  const addFolder = () => {
+    if (!folderName) return
+    handleAddFolder(folderName, color)
     closePopup()
+    resetData()
   }
 
   return (
@@ -33,6 +43,7 @@ const AddFolder = ({handleAddFolder}) => {
 
           <Input  value={folderName}
                   onInput={setFolderName}
+                  onKeyUp={handleKeyUp}
                   placeholder="Название папки"
                   style={{borderColor: color}}/>
 
