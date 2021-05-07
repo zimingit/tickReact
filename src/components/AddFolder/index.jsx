@@ -25,7 +25,8 @@ const AddFolder = ({handleAddFolder}) => {
   const handleKeyUp = (e) => { if (e.key === 'Enter') addFolder() }
   const addFolder = () => {
     if (!folderName) return
-    handleAddFolder(folderName, color)
+    const newFolder = { label: folderName, color, selected: false }
+    handleAddFolder(newFolder)
     closePopup()
     resetData()
   }

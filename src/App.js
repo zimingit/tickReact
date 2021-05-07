@@ -10,19 +10,23 @@ function App() {
   const [tasksList, setTasks] = useState(tasks)
   const [filterCleared, setFilterCleared] = useState(false)
 
-  const handleAddFolder = (label, color) => {
-    const newFolder = { label, color, selected: false }
+  const handleAddFolder = (newFolder) => {
     setFolders([...foldersList, newFolder])
   }
 
   const handleDelFolder = (name) => {
     setFolders(foldersList.filter(({label}) => label !== name))
   }
+  
+  const handleFilter = (path = null) => {
+    setFolders(foldersList.map(folder => ({...folder, selected: folder.label === path})))
+    setFilterCleared(!path)
+  }
 
   useEffect(() => {
+    const filter = (foldersList.find(f => f.selected) || {}).label || null
     const getColor = (label) => foldersList.find(f => f.label === label).color
     const folderNames = foldersList.map(folder => folder.label)
-    const filter = (foldersList.find(folder => folder.selected) || {}).label || null
     const tasksFiltered = tasks.filter(({label}) => {
       return (!filter || label === filter)
         && folderNames.includes(label)
@@ -30,11 +34,6 @@ function App() {
       .map(task => ({ ...task, color: getColor(task.label)}))
     setTasks(tasksFiltered)
   }, [foldersList])
-
-  const handleFilter = (labelName = null) => {
-    setFolders(foldersList.map(folder => ({...folder, selected: folder.label === labelName})))
-    setFilterCleared(!labelName)
-  }
 
   return (
     <div className="app">
