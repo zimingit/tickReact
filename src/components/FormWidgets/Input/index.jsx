@@ -3,6 +3,7 @@ import React from 'react';
 import './Input.scss';
 
 const Input = ({placeholder = '',
+                autofocus = false,
                 className = '',
                 type = 'text',
                 value = '', 
@@ -16,6 +17,7 @@ const Input = ({placeholder = '',
   return (
     <input  type={type}
             value={value}
+            autoFocus={autofocus}
             placeholder={placeholder}
             className={className}
             style={style}
