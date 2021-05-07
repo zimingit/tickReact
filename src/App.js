@@ -1,5 +1,5 @@
 import React , { useState, useEffect } from 'react';
-import { List, Folder, Button, AddFolder, Task } from './components';
+import { List, Folder, Button, AddFolder, AddTask, TaskContainer, Task } from './components';
 import { tasks, folders } from './dataset/tasks.json'
 
 import listIcon from './assets/icons/list.svg';
@@ -7,9 +7,10 @@ import './App.scss';
 
 function App() {
   const [foldersList, setFolders] = useState(folders)
-  const [tasksList, setTasks] = useState(tasks)
+  const [tasksList, setTasks] = useState([])
   const [filterCleared, setFilterCleared] = useState(false)
 
+  // Folders
   const handleAddFolder = (newFolder) => {
     setFolders([...foldersList, newFolder])
   }
@@ -18,6 +19,7 @@ function App() {
     setFolders(foldersList.filter(({label}) => label !== name))
   }
   
+  // Filters
   const handleFilter = (path = null) => {
     setFolders(foldersList.map(folder => ({...folder, selected: folder.label === path})))
     setFilterCleared(!path)
@@ -34,6 +36,30 @@ function App() {
       .map(task => ({ ...task, color: getColor(task.label)}))
     setTasks(tasksFiltered)
   }, [foldersList])
+
+  // Tasks
+  const onCompleteTask = (task) => {
+    const newTasks = tasksList.map(data => ({...data, tasks: data.tasks.map(t => (t.text === task.text ? task : t))}))
+    setTasks(newTasks)
+  }
+
+  const onAddTask = (dataTask, task) => {
+    const newTasks = tasksList.map(data => {
+      return data.label !== dataTask.label
+      ? data
+      : {...data, tasks: [...data.tasks, task]}
+    })
+    setTasks(newTasks)
+  }
+
+  const onDeleteTask = (dataTask, task) => {
+    const newTasks = tasksList.map(data => {
+      return data.label !== dataTask.label
+      ? data
+      : {...data, tasks: data.tasks.filter(t => t.text !== task.text)}
+    })
+    setTasks(newTasks)
+  }
 
   return (
     <div className="app">
@@ -52,8 +78,15 @@ function App() {
       </div>
       <div className="app__tasks">
         <List>
-          { tasksList.map(task => (
-            <Task task={task} color={task.color} key={task.label}/>
+          { tasksList.map(data => (
+            <TaskContainer data={data} key={data.label}>
+              { data.tasks.map(task => (
+                <Task task={task} key={task.text}
+                      onCompleteTask={onCompleteTask}
+                      onDeleteTask={(task) => onDeleteTask(data, task)}/>
+              ))}
+            <AddTask onAddTask={(task) => onAddTask(data, task)}/>
+            </TaskContainer>
           ))}
         </List>
       </div>
