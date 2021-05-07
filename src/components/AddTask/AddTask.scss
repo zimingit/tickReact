@@ -1,0 +1,36 @@
+.add-task {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    button {
+      padding: 11px;
+      position: absolute;
+      right: 0;
+    }
+  }
+
+  &__placeholder {
+    display: flex;
+    align-items: center;
+    color: lightgray;
+    border-radius: 4px;
+    border: 1px solid #e8e7e7;
+    padding: 0;
+    cursor: pointer;
+    transition: padding .2s ease;
+    &:hover {
+      padding: 10px 0;
+    }
+
+    span {
+      padding: 4px;
+      opacity: .5;
+    }
+  }
+}
