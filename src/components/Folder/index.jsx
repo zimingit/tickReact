@@ -29,7 +29,7 @@ const ListItem = ({label, color, selected, handleDelFolder, onClick}) => {
   const getIcon = isAccepted ? null : deleteIcon
   const getDeleteLabel = isAccepted ? 'ok?' : null
 
-  const handleClick = (e) => {
+  const handleDelete = (e) => {
     e.stopPropagation()
     if (isAccepted) return handleDelFolder(label)
     setAccepted(true)
@@ -39,12 +39,14 @@ const ListItem = ({label, color, selected, handleDelFolder, onClick}) => {
     }, 2000)
   }
 
+  const handleClick = () => onClick(label)
+
   return (
-    <li className={classes} onClick={onClick}>
+    <li className={classes} onClick={handleClick}>
       <Badge color={color}/>
       <span className="label">{label}</span>
       <div className="folder_delete">
-        <Button icon={getIcon} style={{color}} onClick={handleClick}>{getDeleteLabel}</Button>
+        <Button icon={getIcon} style={{color}} onClick={handleDelete}>{getDeleteLabel}</Button>
       </div>  
     </li>
   );
