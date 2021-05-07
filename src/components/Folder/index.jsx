@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
 import Badge from '../Badge'
-import Button from '../rButton';
+import Button from '../rButton'
 import setClass from '../../plugins/ClassNames.js'
 
-import './Folder.scss';
-import deleteIcon from '../../assets/icons/delete.svg';
+import './Folder.scss'
+import deleteIcon from '../../assets/icons/delete.svg'
 
 const ListItem = ({label, color, selected, handleDelFolder, onClick}) => {
   // const testMultiClasses = setClass([
