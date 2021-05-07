@@ -1,0 +1,50 @@
+{
+  "folders": [
+    { "label": "Срочное", "color": "#e57373", "selected": true },
+    { "label": "Личное", "color": "#90a4ae", "selected": false },
+    { "label": "Frontend", "color": "#ffcc80", "selected": false },
+    { "label": "Посмотреть", "color": "#80cbc4", "selected": false }
+  ],
+  "tasks": [
+    {
+      "label": "Срочное",
+      "tasks": [
+        {
+          "text": "Описание срочной задачи",
+          "completed": true
+        },
+        {
+          "text": "Описание второй срочной задачи",
+          "completed": false
+        }
+      ]
+    },
+    {
+      "label": "Frontend",
+      "tasks": [
+        {
+          "text": "Добавить детальный просмотр задач",
+          "completed": false
+        }
+      ]
+    },
+    {
+      "label": "Личное",
+      "tasks": [
+        {
+          "text": "Добавить личных задач",
+          "completed": false
+        }
+      ]
+    },
+    {
+      "label": "Посмотреть",
+      "tasks": [
+        {
+          "text": "Добавить задач на просмотр",
+          "completed": false
+        }
+      ]
+    }
+  ]
+}
