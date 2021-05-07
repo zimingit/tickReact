@@ -1,4 +1,4 @@
-.list__item {
+.folder {
   display: flex;
   align-items: center;
   border-radius: 4px;
@@ -7,7 +7,7 @@
   cursor: pointer;
   transition: all .3s;
   
-  &.active {
+  &.selected {
     background-color: white;
     box-shadow: 1px 1px 2px #e0e0e0;
     &:hover {
@@ -18,7 +18,7 @@
   &:hover {
     background-color: #fafafa70;
 
-    .list_delete {
+    .folder_delete {
       opacity: .15;
       &:hover {
         opacity: .7;
@@ -26,12 +26,12 @@
     }
   }
 
-  span {
+  .label {
     padding-left: 15px;
     font-size: 18px;
   }
 
-  .list_delete {
+  .folder_delete {
     margin-left: auto;
     opacity: 0;
     transition: opacity .2s ease;
