@@ -3,10 +3,13 @@ import setClass from '../../plugins/ClassNames.js'
 
 import './Icon.scss';
 
-const Icon = ({className = '', icon, size = 'small'}) => {
+const Icon = ({children, className = '', icon, size = 'small'}) => {
   return (
     <i className={setClass(['icon ', className])}>
-      <img src={icon} className={size} alt="icon"/>
+      {icon &&
+        <img src={icon} className={size} alt="icon"/>
+      }
+      {children}
     </i>
   );
 }

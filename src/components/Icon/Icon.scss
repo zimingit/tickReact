@@ -1,29 +1,36 @@
 i {
-    &.icon {
-        display: flex;
-        img {
-            width: 20px;
-            height: 20px;
+  &.icon {
+    display: flex;
+    font-size: 14px;
+    line-height: 14px;
+    img {
+      width: 20px;
+      height: 20px;
 
-            &.tiny {
-                width: 14px;
-                height: 14px;
-            }
+      &.micro {
+        width: 10px;
+        height: 10px;
+      }
 
-            &.small {
-                width: 18px;
-                height: 18px;
-            }
+      &.tiny {
+        width: 14px;
+        height: 14px;
+      }
 
-            &.medium {
-                width: 22px;
-                height: 22px;
-            }
-            
-            &.large {
-                width: 26px;
-                height: 26px;
-            }
-        }
+      &.small {
+        width: 18px;
+        height: 18px;
+      }
+
+      &.medium {
+        width: 22px;
+        height: 22px;
+      }
+      
+      &.large {
+        width: 26px;
+        height: 26px;
+      }
     }
+  }
 }
