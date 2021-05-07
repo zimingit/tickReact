@@ -1,4 +1,4 @@
-import React , { useState } from 'react';
+import React , { useState, useEffect } from 'react';
 import { List, Folder, Button, AddFolder, Task } from './components';
 import { tasks, folders } from './dataset/tasks.json'
 
@@ -7,43 +7,45 @@ import './App.scss';
 
 function App() {
   const [foldersList, setFolders] = useState(folders)
+  const [tasksList, setTasks] = useState(tasks)
+  const [filterCleared, setFilterCleared] = useState(false)
 
-  const selectedFolderLabel = (foldersList.find(folder => folder.selected) || {}).label
-  const [filterlabel, setFilterLabel] = useState(selectedFolderLabel)
-
-  const tasksFiltered = tasks.filter(({label}) => (filterlabel === label || !filterlabel))
-  const [tasksList, setTasks] = useState(tasksFiltered)
-
-  const getTaskColor = (name) => foldersList.find(folder => folder.label === name).color
   const handleAddFolder = (label, color) => {
     const newFolder = { label, color, selected: false }
-    setFolders(folders => ([...folders, newFolder]))
+    setFolders([...foldersList, newFolder])
   }
 
   const handleDelFolder = (name) => {
-    setFolders(folders => (folders.filter(({label}) => label !== name)))
-    if (name === filterlabel) {
-      handleFilter(null)
-    }
+    setFolders(foldersList.filter(({label}) => label !== name))
   }
 
+  useEffect(() => {
+    const getColor = (label) => foldersList.find(f => f.label === label).color
+    const folderNames = foldersList.map(folder => folder.label)
+    const filter = (foldersList.find(folder => folder.selected) || {}).label || null
+    const tasksFiltered = tasks.filter(({label}) => {
+      return (!filter || label === filter)
+        && folderNames.includes(label)
+      })
+      .map(task => ({ ...task, color: getColor(task.label)}))
+    setTasks(tasksFiltered)
+  }, [foldersList])
+
   const handleFilter = (labelName = null) => {
-    setFilterLabel(labelName)
-    const newTask = tasks.filter(({label}) => (labelName === label || !labelName))
-    setTasks(newTask)
-    setFolders(folders => folders.map(folder => ({...folder, selected: folder.label === labelName})))
+    setFolders(foldersList.map(folder => ({...folder, selected: folder.label === labelName})))
+    setFilterCleared(!labelName)
   }
 
   return (
     <div className="app">
       <div className="app__sidebar">
         <Button icon={listIcon}
-                isActive={!filterlabel}
+                isActive={filterCleared}
                 onClick={() => handleFilter()}>Все задачи</Button>
         <List>
           { foldersList.map(({label, color, selected}) => (
             <Folder {...{label, color, selected, handleDelFolder}}
-                    onClick={() => { handleFilter(label) }}
+                    onClick={handleFilter}
                     key={label}/>
           ))}
         </List>
@@ -52,7 +54,7 @@ function App() {
       <div className="app__tasks">
         <List>
           { tasksList.map(task => (
-            <Task task={task} color={getTaskColor(task.label)} key={task.label}/>
+            <Task task={task} color={task.color} key={task.label}/>
           ))}
         </List>
       </div>
