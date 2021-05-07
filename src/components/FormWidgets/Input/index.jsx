@@ -9,8 +9,9 @@ const Input = ({placeholder = '',
                 style = {},
                 onChange = () => {},
                 onInput = () => {},
-                onFocus= () => {},
-                onBlur= () => {}
+                onFocus = () => {},
+                onBlur = () => {},
+                onKeyUp = () => {}
               }) => {
   return (
     <input  type={type}
@@ -21,7 +22,8 @@ const Input = ({placeholder = '',
             onChange={e => onChange(e.target.value)}
             onInput={e => onInput(e.target.value)}
             onFocus={e => onFocus(e.target)}
-            onBlur={e => onBlur(e.target)}/>
+            onBlur={e => onBlur(e.target)}
+            onKeyUp={onKeyUp}/>
   );
 }
 
