@@ -1,37 +1,60 @@
 import React , { useState } from 'react';
-import List from './components/List';
-import Button from './components/rButton';
-import AddFolder from './components/AddFolder';
+import { List, Folder, Button, AddFolder, Task } from './components';
+import { tasks, folders } from './dataset/tasks.json'
 
 import listIcon from './assets/icons/list.svg';
 import './App.scss';
 
 function App() {
-  const [state, setState] = useState({
-  listData: [
-    { label: 'Срочное', color: '#e57373', selected: true },
-    { label: 'Личное', color: '#90a4ae', selected: false },
-    { label: 'Frontend', color: '#ffcc80', selected: false },
-    { label: 'Посмотреть', color: '#80cbc4', selected: false }
-  ]})
+  const [foldersList, setFolders] = useState(folders)
+
+  const selectedFolderLabel = (foldersList.find(folder => folder.selected) || {}).label
+  const [filterlabel, setFilterLabel] = useState(selectedFolderLabel)
+
+  const tasksFiltered = tasks.filter(({label}) => (filterlabel === label || !filterlabel))
+  const [tasksList, setTasks] = useState(tasksFiltered)
+
+  const getTaskColor = (name) => foldersList.find(folder => folder.label === name).color
   const handleAddFolder = (label, color) => {
-    const newList = { label, color, selected: false }
-    setState({...state, listData: [...state.listData, newList]})
+    const newFolder = { label, color, selected: false }
+    setFolders(folders => ([...folders, newFolder]))
   }
+
   const handleDelFolder = (name) => {
-    const filteredList = state.listData.filter(({label}) => label !== name)
-    setState({...state, listData: filteredList})
+    setFolders(folders => (folders.filter(({label}) => label !== name)))
+    if (name === filterlabel) {
+      handleFilter(null)
+    }
+  }
+
+  const handleFilter = (labelName = null) => {
+    setFilterLabel(labelName)
+    const newTask = tasks.filter(({label}) => (labelName === label || !labelName))
+    setTasks(newTask)
+    setFolders(folders => folders.map(folder => ({...folder, selected: folder.label === labelName})))
   }
 
   return (
     <div className="app">
       <div className="app__sidebar">
-        <Button icon={listIcon}>Все задачи</Button>
-        <List handleDelFolder={handleDelFolder} data={state.listData}/>
+        <Button icon={listIcon}
+                isActive={!filterlabel}
+                onClick={() => handleFilter()}>Все задачи</Button>
+        <List>
+          { foldersList.map(({label, color, selected}) => (
+            <Folder {...{label, color, selected, handleDelFolder}}
+                    onClick={() => { handleFilter(label) }}
+                    key={label}/>
+          ))}
+        </List>
         <AddFolder handleAddFolder={handleAddFolder}/>
       </div>
-      <div className="app__ticks">
-
+      <div className="app__tasks">
+        <List>
+          { tasksList.map(task => (
+            <Task task={task} color={getTaskColor(task.label)} key={task.label}/>
+          ))}
+        </List>
       </div>
     </div>
   );
