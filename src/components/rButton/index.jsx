@@ -5,7 +5,7 @@ import setClass from '../../plugins/ClassNames.js'
 import './rButton.scss';
 
 const rButton = ({children, icon, style, isActive, className, onClick = () => {}}) => {
-  const classes = setClass(['rbutton', {isActive}, className ])
+  const classes = setClass(['rbutton', {active: isActive}, className ])
   return (
     <button type="button" className={classes} style={style} onClick={onClick}>
       { icon && <Icon icon={icon}/> }
