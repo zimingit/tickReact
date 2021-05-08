@@ -11,6 +11,7 @@ import './Detailed.scss';
 const Detailed = () => {
   const history = useHistory()
   const [saveLavel, setSaveLabel] = useState('Сохранено')
+  const [backLabel, setBackLabel] = useState('Назад')
   const {folder, id} = useParams();
   const [task, setTask] = useState(null);
   const [description, setDescription] = useState('');
@@ -26,12 +27,14 @@ const Detailed = () => {
   const onChange = (description) => {
     setDescription(description)
     setSaveLabel('Сохранить')
+    setBackLabel('Отменить')
   }
 
   const onSave = async () => {
     const newTask = { ...task, description }
     await ls.updTask(folder, newTask)
     setSaveLabel('Сохранено')
+    setBackLabel('Назад')
   }
 
   const goBack = () => {
