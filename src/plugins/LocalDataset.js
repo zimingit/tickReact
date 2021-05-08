@@ -74,6 +74,15 @@ const ls = {
   },
 
   // Task
+  getTask: async (folder, id) => {
+    const task = ((await ls.getTasks()).find(tasks => tasks.label === folder) || { tasks: [] }).tasks[id]
+    if (!task) return null
+
+    const color = ((await ls.getFolders()).find(f => f.label === folder) || {}).color || ''
+    
+    return { ...task, color }
+  },
+
   addTask: async (folder, task) => {
     const newTasks = (await ls.getTasks()).map(data => {
           return data.label !== folder.label
