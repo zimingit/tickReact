@@ -1,7 +1,7 @@
 import React , { useState, useEffect } from 'react';
 import { List, Folder, Button, AddFolder, AddTask, TaskContainer, Task } from './components';
 import setClass from './plugins/ClassNames'
-import { tasks, folders } from './dataset/tasks.json'
+import ls from './plugins/LocalDataset'
 
 import listIcon from './assets/icons/list.svg';
 import menuIcon from './assets/icons/menu.svg';
@@ -9,61 +9,61 @@ import closeIcon from './assets/icons/close.svg';
 import './App.scss';
 
 function App() {
-  const [foldersList, setFolders] = useState(folders)
+  const [foldersList, setFolders] = useState([])
   const [tasksList, setTasks] = useState([])
   const [filterCleared, setFilterCleared] = useState(false)
+  const [filter, setFilter] = useState(null)
   const [showMenu, setShowMenu] = useState(false)
-  const getMenuIcon = showMenu ? closeIcon : menuIcon 
+  const getMenuIcon = showMenu ? closeIcon : menuIcon
+
+  useEffect(() => {
+    (async () => {
+      setFolders(await ls.getFolders())
+    })()
+  }, [])
 
   // Folders
-  const handleAddFolder = (newFolder) => {
-    setFolders([...foldersList, newFolder])
+  const handleAddFolder = async (folder) => {
+    await ls.addFolder(folder)
+    setFolders(await ls.getFolders())
+    await ls.initTasks(folder.label)
   }
 
-  const handleDelFolder = (name) => {
-    setFolders(foldersList.filter(({label}) => label !== name))
+  const handleDelFolder = async (name) => {
+    await ls.delFolder(name)
+    setFolders(await ls.getFolders())
   }
   
   // Filters
-  const handleFilter = (path = null) => {
-    setFolders(foldersList.map(folder => ({...folder, selected: folder.label === path})))
-    setFilterCleared(!path)
+  const handleFilter = async (filter = null) => {
+    const newFoldres = foldersList.map(folder => ({...folder, selected: folder.label === filter}))
+    await ls.updFolders(newFoldres)
+    setFolders(await ls.getFolders())
+    setFilterCleared(!filter)
   }
 
   useEffect(() => {
-    const filter = (foldersList.find(f => f.selected) || {}).label || null
-    const getColor = (label) => foldersList.find(f => f.label === label).color
-    const folderNames = foldersList.map(folder => folder.label)
-    const tasksFiltered = tasks.filter(({label}) => {
-      return (!filter || label === filter)
-        && folderNames.includes(label)
-      })
-      .map(task => ({ ...task, color: getColor(task.label)}))
-    setTasks(tasksFiltered)
+    (async () => {
+      const filter = (foldersList.find(f => f.selected) || {}).label || null
+      setFilter(filter)
+      setTasks(await ls.getTasks(filter))
+    })()
   }, [foldersList])
 
   // Tasks
-  const onCompleteTask = (task) => {
-    const newTasks = tasksList.map(data => ({...data, tasks: data.tasks.map(t => (t.text === task.text ? task : t))}))
-    setTasks(newTasks)
+  const onCompleteTask = async (dataTask, task) => {
+    await ls.completeTask(dataTask, task)
+    setTasks(await ls.getTasks(filter))
   }
 
-  const onAddTask = (dataTask, task) => {
-    const newTasks = tasksList.map(data => {
-      return data.label !== dataTask.label
-      ? data
-      : {...data, tasks: [...data.tasks, task]}
-    })
-    setTasks(newTasks)
+  const onAddTask = async (dataTask, task) => {
+    await ls.addTask(dataTask, task)
+    setTasks(await ls.getTasks(filter))
   }
 
-  const onDeleteTask = (dataTask, task) => {
-    const newTasks = tasksList.map(data => {
-      return data.label !== dataTask.label
-      ? data
-      : {...data, tasks: data.tasks.filter(t => t.text !== task.text)}
-    })
-    setTasks(newTasks)
+  const onDeleteTask = async (dataTask, task) => {
+    await ls.delTask(dataTask, task)
+    setTasks(await ls.getTasks(filter))
   }
 
   return (
@@ -88,7 +88,7 @@ function App() {
             <TaskContainer data={data} key={data.label}>
               { data.tasks.map(task => (
                 <Task task={task} key={task.text}
-                      onCompleteTask={onCompleteTask}
+                      onCompleteTask={(task) => onCompleteTask(data, task)}
                       onDeleteTask={(task) => onDeleteTask(data, task)}/>
               ))}
             <AddTask onAddTask={(task) => onAddTask(data, task)}/>
