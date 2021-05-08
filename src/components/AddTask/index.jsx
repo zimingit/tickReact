@@ -25,7 +25,7 @@ const AddTask = ({ onAddTask }) => {
   }
   const handleAddTask = () => {
     if (!taskText) return
-    const newTask = { text: taskText, completed: false }
+    const newTask = { text: taskText, completed: false, description: '' }
     onAddTask(newTask)
     setTaskText('')
     setShowField(false)
