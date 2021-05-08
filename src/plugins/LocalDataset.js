@@ -108,6 +108,15 @@ const ls = {
           : {...data, tasks: data.tasks.filter(t => t.text !== task.text)}
         })
     return await ls.updTasks(newTasks)
+  },
+
+  updTask: async (folder, task) => {
+    const newTasks = (await ls.getTasks()).map(data => {
+          return data.label !== folder
+          ? data
+          : {...data, tasks: data.tasks.map(t => (t.text === task.text? task : t))}
+        })
+    return await ls.updTasks(newTasks)
   }
 }
 
