@@ -92,20 +92,25 @@ function App() {
       <div className="menu"><Button icon={getMenuIcon} onClick={() => setShowMenu(!showMenu)}/></div>
       
       <div className="app__sidebar">
-        <Button icon={listIcon}
-                isActive={!filter}
-                onClick={() => handleFolderFilter()}>Все задачи</Button>
-        <List>
-          { foldersList.map(({label, color, selected}) => (
-            <Folder {...{label, color, selected, handleDelFolder}}
-                    onClick={handleFolderFilter}
-                    key={label}/>
-          ))}
-        </List>
+        {tasksList.length > 0 &&
+          <Button icon={listIcon}
+                  isActive={!filter}
+                  onClick={() => handleFolderFilter()}>Все задачи</Button>
+        }
+        {tasksList.length > 0 &&
+          <List>
+            { foldersList.map(({label, color, selected}) => (
+              <Folder {...{label, color, selected, handleDelFolder}}
+                      onClick={handleFolderFilter}
+                      key={label}/>
+            ))}
+          </List>
+        }
         <AddFolder handleAddFolder={handleAddFolder}/>
       </div>
 
       <div className="app__tasks">
+        {tasksList.length > 0 ?
         <List>
           { tasksList.map(data => (
             <TaskContainer data={data}
@@ -124,6 +129,8 @@ function App() {
             </TaskContainer>
           ))}
         </List>
+        : <h3 className="app__placeholder">Задачи отсутствуют</h3>
+        }
       </div>
     </div>
   );
