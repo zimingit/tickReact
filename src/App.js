@@ -9,6 +9,17 @@ import closeIcon from './assets/icons/close.svg';
 import './App.scss';
 
 function App() {
+  const filterFunc = ({filter}, task) => {
+    const filterMatrix = {
+      'Все': true,
+      'null': true,
+      'Выполненные': task.completed,
+      'Невыполненные': !task.completed
+    }
+
+    return filterMatrix[filter]
+  }
+
   const [foldersList, setFolders] = useState([])
   const [tasksList, setTasks] = useState([])
   const [filter, setFilter] = useState(null)
@@ -31,10 +42,22 @@ function App() {
   const handleDelFolder = async (name) => {
     await ls.delFolder(name)
     setFolders(await ls.getFolders())
+    await ls.delTasks(name)
   }
   
   // Filters
-  const handleFilter = async (filter = null) => {
+  const handleTasksFilter = async (data, tasksFilter = null) => {
+    const newTasks = (await ls.getTasks()).map(tasks => {
+      if (tasks.label === data.label) {
+        tasks.filter = tasksFilter
+      }
+      return tasks
+    })
+    await ls.updTasks(newTasks)
+    setTasks(await ls.getTasks(filter))
+  }
+
+  const handleFolderFilter = async (filter = null) => {
     const newFoldres = foldersList.map(folder => ({...folder, selected: folder.label === filter}))
     await ls.updFolders(newFoldres)
     setFolders(await ls.getFolders())
@@ -67,28 +90,36 @@ function App() {
   return (
     <div className={setClass(['app', {'menu-opened': showMenu}])}>
       <div className="menu"><Button icon={getMenuIcon} onClick={() => setShowMenu(!showMenu)}/></div>
+      
       <div className="app__sidebar">
         <Button icon={listIcon}
                 isActive={!filter}
-                onClick={() => handleFilter()}>Все задачи</Button>
+                onClick={() => handleFolderFilter()}>Все задачи</Button>
         <List>
           { foldersList.map(({label, color, selected}) => (
             <Folder {...{label, color, selected, handleDelFolder}}
-                    onClick={handleFilter}
+                    onClick={handleFolderFilter}
                     key={label}/>
           ))}
         </List>
         <AddFolder handleAddFolder={handleAddFolder}/>
       </div>
+
       <div className="app__tasks">
         <List>
           { tasksList.map(data => (
-            <TaskContainer data={data} key={data.label}>
-              { data.tasks.map(task => (
+            <TaskContainer data={data}
+                           key={data.label}
+                           setFilter={handleTasksFilter}>
+
+              { data.tasks
+                .filter(task => filterFunc(data, task))
+                .map(task => (
                 <Task task={task} key={task.text}
                       onCompleteTask={(task) => onCompleteTask(data, task)}
                       onDeleteTask={(task) => onDeleteTask(data, task)}/>
               ))}
+
             <AddTask onAddTask={(task) => onAddTask(data, task)}/>
             </TaskContainer>
           ))}
