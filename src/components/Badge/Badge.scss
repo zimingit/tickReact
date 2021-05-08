@@ -2,6 +2,7 @@ i {
     &.badge {
         display: block;
         border-radius: 50%;
+        flex-shrink: 0;
         &.size {
             &--small {
                 width: 10px;
