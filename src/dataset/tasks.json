@@ -34,7 +34,7 @@
         {
           "text": "Работа на мобильных устройствах",
           "completed": false,
-          "description": "<p>Для проверки работы на мобильных устройствах воспользуйтесь DevTools'ами или зайдите на сайт alekseyzimin.com/tickReact с мобильного устройства</p>"
+          "description": "<p>Для проверки работы на мобильных устройствах воспользуйтесь DevTools'ами или зайдите на сайт <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://alekseyzimin.com/tickReact/\">alekseyzimin.com/tickReact</a> с мобильного устройства</p>"
         }
       ]
     },
