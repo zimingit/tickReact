@@ -1,14 +1,19 @@
 import React , { useState, useEffect } from 'react';
 import { List, Folder, Button, AddFolder, AddTask, TaskContainer, Task } from './components';
+import setClass from './plugins/ClassNames'
 import { tasks, folders } from './dataset/tasks.json'
 
 import listIcon from './assets/icons/list.svg';
+import menuIcon from './assets/icons/menu.svg';
+import closeIcon from './assets/icons/close.svg';
 import './App.scss';
 
 function App() {
   const [foldersList, setFolders] = useState(folders)
   const [tasksList, setTasks] = useState([])
   const [filterCleared, setFilterCleared] = useState(false)
+  const [showMenu, setShowMenu] = useState(false)
+  const getMenuIcon = showMenu ? closeIcon : menuIcon 
 
   // Folders
   const handleAddFolder = (newFolder) => {
@@ -62,7 +67,8 @@ function App() {
   }
 
   return (
-    <div className="app">
+    <div className={setClass(['app', {'menu-opened': showMenu}])}>
+      <div className="menu"><Button icon={getMenuIcon} onClick={() => setShowMenu(!showMenu)}/></div>
       <div className="app__sidebar">
         <Button icon={listIcon}
                 isActive={filterCleared}
