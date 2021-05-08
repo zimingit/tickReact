@@ -5,7 +5,7 @@ import setClass from '../../plugins/ClassNames.js'
 
 import deleteIcon from '../../assets/icons/close.svg'
 import detailed from '../../assets/icons/eye.svg'
-import './Task.scss';
+import './Task.scss'
 
 const Task = ({ task, onCompleteTask, onDeleteTask = () => {}, onDetailedView = () => {}}) => {
   const [didMount, setDidMount] = useState(false)
@@ -27,9 +27,6 @@ const Task = ({ task, onCompleteTask, onDeleteTask = () => {}, onDetailedView = 
       setAccepted(false)
     }, 2000)
   }
-  const handleDetailed = () => {
-    onDetailedView(task)
-  }
 
   const onCompletedChange = (value) => {
     const newTask = { ...task, completed: value }
@@ -42,7 +39,8 @@ const Task = ({ task, onCompleteTask, onDeleteTask = () => {}, onDetailedView = 
 
       <p className="task__text">{task.text}</p>
 
-      <div className="task__view" onClick={handleDetailed}>
+      
+      <div className="task__view" onClick={onDetailedView}>
         <Icon icon={detailed} size="large"/>
       </div>
       <div className="task__delete" onClick={handleDelete}>
