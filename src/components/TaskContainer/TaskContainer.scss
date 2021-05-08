@@ -11,3 +11,9 @@
     border-bottom: 1px solid transparent;
   }
 }
+
+@media (orientation: portrait) {
+  .task-container {
+    padding: 25px 10px;
+  }
+}
