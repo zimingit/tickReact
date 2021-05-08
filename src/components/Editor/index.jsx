@@ -1,5 +1,6 @@
 import React from 'react';
 import { useEditor, EditorContent } from '@tiptap/react'
+import Link from '@tiptap/extension-link'
 import Menu from './Menu.jsx'
 import StarterKit from '@tiptap/starter-kit'
 
@@ -10,6 +11,7 @@ const Editor = ({onChange = () => {}, content = '<p></p>'}) => {
   const editor = useEditor({
     extensions: [
       StarterKit,
+      Link
     ],
     onUpdate() {
       onChange(this.getHTML())

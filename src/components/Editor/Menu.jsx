@@ -6,6 +6,10 @@ const Menu = ({editor}) => {
   if (!editor) {
     return null
   }
+  const setLink = () => {
+    const url = window.prompt('URL')
+    editor.chain().focus().setLink({ href: url }).run()
+  }
 
   return (
     <div className="menu">
@@ -66,6 +70,9 @@ const Menu = ({editor}) => {
       </button>
       <button onClick={() => editor.chain().focus().setHorizontalRule().run()}>
         <i className="ri-separator"></i>
+      </button>
+      <button onClick={setLink}>
+        <i className="ri-links-line"></i>
       </button>
       <button onClick={() => editor.chain().focus().undo().run()}>
         <i className="ri-arrow-go-back-line"></i>
