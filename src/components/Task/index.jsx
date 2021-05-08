@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
 import Checkbox from '../FormWidgets/Checkbox'
 import Icon from '../Icon'
 import setClass from '../../plugins/ClassNames.js'
 
-import deleteIcon from '../../assets/icons/close.svg';
+import deleteIcon from '../../assets/icons/close.svg'
+import detailed from '../../assets/icons/eye.svg'
 import './Task.scss';
 
-const Task = ({ task, onCompleteTask, onDeleteTask = () => {}}) => {
+const Task = ({ task, onCompleteTask, onDeleteTask = () => {}, onDetailedView = () => {}}) => {
   const [didMount, setDidMount] = useState(false)
   const [isAccepted, setAccepted] = useState(false)
   const getIcon = isAccepted ? null : deleteIcon
@@ -26,6 +27,9 @@ const Task = ({ task, onCompleteTask, onDeleteTask = () => {}}) => {
       setAccepted(false)
     }, 2000)
   }
+  const handleDetailed = () => {
+    onDetailedView(task)
+  }
 
   const onCompletedChange = (value) => {
     const newTask = { ...task, completed: value }
@@ -36,8 +40,11 @@ const Task = ({ task, onCompleteTask, onDeleteTask = () => {}}) => {
     <div className={classes}>
       <Checkbox value={task.completed} onChange={onCompletedChange}></Checkbox>
 
-      <span className="task__text">{task.text}</span>
+      <p className="task__text">{task.text}</p>
 
+      <div className="task__view" onClick={handleDetailed}>
+        <Icon icon={detailed} size="large"/>
+      </div>
       <div className="task__delete" onClick={handleDelete}>
         <Icon icon={getIcon} size="tiny">{getDeleteLabel}</Icon>
       </div>
