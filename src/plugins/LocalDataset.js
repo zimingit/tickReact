@@ -23,18 +23,13 @@ const ls = {
   },
 
   addFolder: async (folder) => {
-    const key = 'folders'
-    await ls.set(key, [...await ls.getFolders(), folder])
-    return folder
+    const newFolders = [...await ls.getFolders(), folder]
+    return await ls.updFolders(newFolders)
   },
 
   delFolder: async (folderName) => {
-    const key = 'folders'
-    const folders = await ls.getFolders()
-    const newFolders = folders.filter(({label}) => label !== folderName)
-    const deletedFolder = folders.find(({label}) => label === folderName)
-    await ls.set(key, newFolders)
-    return deletedFolder
+    const newFolders = (await ls.getFolders()).filter(({label}) => label !== folderName)
+    return await ls.updFolders(newFolders)
   },
 
   // Tasks
@@ -60,47 +55,50 @@ const ls = {
   },
 
   initTasks: async (label) => {
-    const key = 'tasks'
     const init = {
       label,
+      filter: null,
       tasks: []
     }
-    const newTasks = [...(await ls.getTasks()), init]
-    await ls.set(key, newTasks)
-    return newTasks
+    return await ls.addTasks(init)
   },
 
+  addTasks: async (tasks) => {
+    const newTasks = [...(await ls.getTasks()), tasks]
+    return await ls.updTasks(newTasks)
+  },
+
+  delTasks: async (tasksLabel) => {
+    const newTasks = (await ls.getTasks()).filter(data => data.label !== tasksLabel)
+    return await ls.updTasks(newTasks)
+  },
+
+  // Task
   addTask: async (folder, task) => {
-    const key = 'tasks'
     const newTasks = (await ls.getTasks()).map(data => {
           return data.label !== folder.label
           ? data
           : {...data, tasks: [...data.tasks, task]}
         })
-    await ls.set(key, newTasks)
-    return task
+    return await ls.updTasks(newTasks)
   },
 
   completeTask: async (folder, task) => {
-    const key = 'tasks'
     const newTasks = (await ls.getTasks()).map(data => {
           return data.label !== folder.label
           ? data
           : {...data, tasks: data.tasks.map(t => (t.text === task.text ? task : t)) }
         })
-    await ls.set(key, newTasks)
-    return task
+    return await ls.updTasks(newTasks)
   },
 
   delTask: async (folder, task) => {
-    const key = 'tasks'
     const newTasks = (await ls.getTasks()).map(data => {
           return data.label !== folder.label
           ? data
           : {...data, tasks: data.tasks.filter(t => t.text !== task.text)}
         })
-    await ls.set(key, newTasks)
-    return task
+    return await ls.updTasks(newTasks)
   }
 }
 
