@@ -11,7 +11,6 @@ import './App.scss';
 function App() {
   const [foldersList, setFolders] = useState([])
   const [tasksList, setTasks] = useState([])
-  const [filterCleared, setFilterCleared] = useState(false)
   const [filter, setFilter] = useState(null)
   const [showMenu, setShowMenu] = useState(false)
   const getMenuIcon = showMenu ? closeIcon : menuIcon
@@ -39,7 +38,6 @@ function App() {
     const newFoldres = foldersList.map(folder => ({...folder, selected: folder.label === filter}))
     await ls.updFolders(newFoldres)
     setFolders(await ls.getFolders())
-    setFilterCleared(!filter)
   }
 
   useEffect(() => {
@@ -71,7 +69,7 @@ function App() {
       <div className="menu"><Button icon={getMenuIcon} onClick={() => setShowMenu(!showMenu)}/></div>
       <div className="app__sidebar">
         <Button icon={listIcon}
-                isActive={filterCleared}
+                isActive={!filter}
                 onClick={() => handleFilter()}>Все задачи</Button>
         <List>
           { foldersList.map(({label, color, selected}) => (
