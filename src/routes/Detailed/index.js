@@ -52,7 +52,7 @@ const Detailed = () => {
                   style={{backgroundColor: task.color}}>{saveLavel}</Button>
           <Button onClick={goBack}
                   className="filled center"
-                  style={{backgroundColor: task.color}}>Отменить</Button>
+                  style={{backgroundColor: task.color}}>{backLabel}</Button>
         </div>
       </div>
     : ''
