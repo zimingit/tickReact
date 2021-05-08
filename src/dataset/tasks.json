@@ -1,11 +1,37 @@
 {
   "folders": [
-    { "label": "Срочное", "color": "#e57373", "selected": true },
+    { "label": "Описание", "color": "#7986cb", "selected": true },
+    { "label": "Срочное", "color": "#e57373", "selected": false },
     { "label": "Личное", "color": "#90a4ae", "selected": false },
     { "label": "Frontend", "color": "#ffcc80", "selected": false },
     { "label": "Посмотреть", "color": "#80cbc4", "selected": false }
   ],
   "tasks": [
+    {
+      "label": "Описание",
+      "tasks": [
+        {
+          "text": "Навести и нажать \"просмотр\" для детального просмотра",
+          "completed": false
+        },
+        {
+          "text": "Операции добавления, удаления, изменения",
+          "completed": false
+        },
+        {
+          "text": "Добавление папки",
+          "completed": false
+        },
+        {
+          "text": "Фильтрация",
+          "completed": false
+        },
+        {
+          "text": "Проверить работу на мобильных устройствах",
+          "completed": false
+        }
+      ]
+    },
     {
       "label": "Срочное",
       "tasks": [
