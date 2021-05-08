@@ -1,14 +1,16 @@
 import React , { useState, useEffect } from 'react';
-import { List, Folder, Button, AddFolder, AddTask, TaskContainer, Task } from './components';
-import setClass from './plugins/ClassNames'
-import ls from './plugins/LocalDataset'
+import { useHistory } from 'react-router-dom'
+import { List, Folder, Button, AddFolder, AddTask, TaskContainer, Task } from '../../components';
+import setClass from '../../plugins/ClassNames'
+import ls from '../../plugins/LocalDataset'
 
-import listIcon from './assets/icons/list.svg';
-import menuIcon from './assets/icons/menu.svg';
-import closeIcon from './assets/icons/close.svg';
+import listIcon from '../../assets/icons/list.svg';
+import menuIcon from '../../assets/icons/menu.svg';
+import closeIcon from '../../assets/icons/close.svg';
 import './App.scss';
 
 function App() {
+  const history = useHistory()
   const filterFunc = ({filter}, task) => {
     const filterMatrix = {
       'Все': true,
@@ -87,6 +89,10 @@ function App() {
     setTasks(await ls.getTasks(filter))
   }
 
+  const onDetailedView = ({label: folder}, id) => {
+    history.push(`/${folder}/${id}`)
+  }
+
   return (
     <div className={setClass(['app', {'menu-opened': showMenu}])}>
       <div className="menu"><Button icon={getMenuIcon} onClick={() => setShowMenu(!showMenu)}/></div>
@@ -119,10 +125,11 @@ function App() {
 
               { data.tasks
                 .filter(task => filterFunc(data, task))
-                .map(task => (
+                .map((task, id) => (
                 <Task task={task} key={task.text}
                       onCompleteTask={(task) => onCompleteTask(data, task)}
-                      onDeleteTask={(task) => onDeleteTask(data, task)}/>
+                      onDeleteTask={(task) => onDeleteTask(data, task)}
+                      onDetailedView={() => onDetailedView(data, id)}/>
               ))}
 
             <AddTask onAddTask={(task) => onAddTask(data, task)}/>
