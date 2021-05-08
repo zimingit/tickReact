@@ -59,6 +59,17 @@ const ls = {
     return await ls.getTasks()
   },
 
+  initTasks: async (label) => {
+    const key = 'tasks'
+    const init = {
+      label,
+      tasks: []
+    }
+    const newTasks = [...(await ls.getTasks()), init]
+    await ls.set(key, newTasks)
+    return newTasks
+  },
+
   addTask: async (folder, task) => {
     const key = 'tasks'
     const newTasks = (await ls.getTasks()).map(data => {
