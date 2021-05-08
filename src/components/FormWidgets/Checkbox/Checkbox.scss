@@ -1,5 +1,6 @@
 .checkbox {
   display: flex;
+  flex-shrink: 0;
   margin: 1px;
   width: 18px;
   height: 18px;
