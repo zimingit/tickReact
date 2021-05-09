@@ -2,7 +2,7 @@ import React , { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom'
 import { List, Folder, Button, AddFolder, AddTask, TaskContainer, Task } from '../../components';
 import setClass from '../../plugins/ClassNames'
-import ls from '../../plugins/LocalDataset'
+import $ds from '../../api/DataService'
 
 import listIcon from '../../assets/icons/list.svg';
 import menuIcon from '../../assets/icons/menu.svg';
@@ -22,75 +22,78 @@ function App() {
     return filterMatrix[filter]
   }
 
-  const [foldersList, setFolders] = useState([])
-  const [tasksList, setTasks] = useState([])
-  const [filter, setFilter] = useState(null)
+  const [folders, setFolders] = useState(null)
+  const [folderSelected, setFolderSelected] = useState(null)
+  const [tasks, setTasks] = useState([])
   const [showMenu, setShowMenu] = useState(false)
   const getMenuIcon = showMenu ? closeIcon : menuIcon
 
   useEffect(() => {
     (async () => {
-      setFolders(await ls.getFolders())
+      const folders = await $ds.getFolders()
+      const [select = null] = folders
+      setFolderSelected(select)
+      setFolders(folders)
     })()
   }, [])
 
   // Folders
   const handleAddFolder = async (folder) => {
-    await ls.addFolder(folder)
-    setFolders(await ls.getFolders())
-    await ls.initTasks(folder.label)
+    const newFolder = await $ds.addFolder(folder)
+    setFolders([...folders, newFolder])
   }
 
-  const handleDelFolder = async (name) => {
-    await ls.delFolder(name)
-    setFolders(await ls.getFolders())
-    await ls.delTasks(name)
+  const handleDelFolder = async (folder) => {
+    const deleted = await $ds.delFolder(folder)
+    setFolders(folders.filter(f => f.id !== deleted.id))
   }
   
   // Filters
-  const handleTasksFilter = async (data, tasksFilter = null) => {
-    const newTasks = (await ls.getTasks()).map(tasks => {
-      if (tasks.label === data.label) {
-        tasks.filter = tasksFilter
-      }
-      return tasks
-    })
-    await ls.updTasks(newTasks)
-    setTasks(await ls.getTasks(filter))
+  const handleTasksFilter = async (data, filter = null) => {
+    const newFolder = { 
+      color: data.color,
+      id: data.id,
+      label: data.label,
+      filter
+    }
+    const updatedFolder = await $ds.updFolder(newFolder)
+    const tasks = folderSelected ? $ds.getTasks(updatedFolder) : $ds.getAllTasks()
+    setTasks(await tasks)
   }
 
-  const handleFolderFilter = async (filter = null) => {
-    const newFoldres = foldersList.map(folder => ({...folder, selected: folder.label === filter}))
-    await ls.updFolders(newFoldres)
-    setFolders(await ls.getFolders())
+  const handleFolderFilter = async (folder = null) => {
+    setFolderSelected(folder)
   }
 
   useEffect(() => {
     (async () => {
-      const filter = (foldersList.find(f => f.selected) || {}).label || null
-      setFilter(filter)
-      setTasks(await ls.getTasks(filter))
+      if (!folders) return
+      const tasks = folderSelected ? await $ds.getTasks(folderSelected) : await $ds.getAllTasks()
+      setTasks(tasks)
     })()
-  }, [foldersList])
+  }, [folderSelected, folders])
 
   // Tasks
-  const onCompleteTask = async (dataTask, task) => {
-    await ls.completeTask(dataTask, task)
-    setTasks(await ls.getTasks(filter))
+  const onCompleteTask = async (folder, task) => {
+    await $ds.updTask(folder, task)
+    const tasks = folderSelected ? $ds.getTasks(folderSelected) : $ds.getAllTasks()
+    setTasks(await tasks)
   }
 
-  const onAddTask = async (dataTask, task) => {
-    await ls.addTask(dataTask, task)
-    setTasks(await ls.getTasks(filter))
+  const onAddTask = async (folder, task) => {
+    await $ds.addTask(folder, task)
+    const tasks = folderSelected ? $ds.getTasks(folderSelected) : $ds.getAllTasks()
+    setTasks(await tasks)
   }
 
-  const onDeleteTask = async (dataTask, task) => {
-    await ls.delTask(dataTask, task)
-    setTasks(await ls.getTasks(filter))
+  const onDeleteTask = async (folder, task) => {
+    await $ds.delTask(folder, task)
+    const tasks = folderSelected ? $ds.getTasks(folderSelected) : $ds.getAllTasks()
+    setTasks(await tasks)
   }
 
-  const onDetailedView = ({label: folder}, id) => {
-    history.push(`/${folder}/${id}`)
+  const onDetailedView = (folder, task) => {
+    history.push(`/${folder.id}/${task.id}`)
   }
 
   return (
@@ -98,17 +101,18 @@ function App() {
       <div className="menu"><Button icon={getMenuIcon} onClick={() => setShowMenu(!showMenu)}/></div>
       
       <div className="app__sidebar">
-        {tasksList.length > 0 &&
+        {folders &&
           <Button icon={listIcon}
-                  isActive={!filter}
+                  isActive={!folderSelected}
                   onClick={() => handleFolderFilter()}>Все задачи</Button>
         }
-        {tasksList.length > 0 &&
+        {folders &&
           <List>
-            { foldersList.map(({label, color, selected}) => (
-              <Folder {...{label, color, selected, handleDelFolder}}
-                      onClick={handleFolderFilter}
-                      key={label}/>
+            { folders.map((folder) => (
+              <Folder {...{...folder, handleDelFolder}}
+                      selected={folderSelected}
+                      onClick={() => handleFolderFilter(folder)}
+                      key={folder.id}/>
             ))}
           </List>
         }
@@ -116,23 +120,23 @@ function App() {
       </div>
 
       <div className="app__tasks">
-        {tasksList.length > 0 ?
+        {tasks.length > 0 ?
         <List>
-          { tasksList.map(data => (
-            <TaskContainer data={data}
-                           key={data.label}
+          { tasks.map(folder => (
+            <TaskContainer data={folder}
+                           key={folder.id}
                            setFilter={handleTasksFilter}>
 
-              { data.tasks
-                .filter(task => filterFunc(data, task))
-                .map((task, id) => (
-                <Task task={task} key={task.text}
-                      onCompleteTask={(task) => onCompleteTask(data, task)}
-                      onDeleteTask={(task) => onDeleteTask(data, task)}
-                      onDetailedView={() => onDetailedView(data, id)}/>
+              { folder.tasks
+                .filter(task => filterFunc(folder, task))
+                .map(task => (
+                <Task task={task} key={task.name}
+                      onCompleteTask={(task) => onCompleteTask(folder, task)}
+                      onDeleteTask={(task) => onDeleteTask(folder, task)}
+                      onDetailedView={() => onDetailedView(folder, task)}/>
               ))}
 
-            <AddTask onAddTask={(task) => onAddTask(data, task)}/>
+            <AddTask onAddTask={(task) => onAddTask(folder, task)}/>
             </TaskContainer>
           ))}
         </List>
