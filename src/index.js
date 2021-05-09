@@ -11,7 +11,7 @@ ReactDOM.render(
     <Suspense fallback={<h1>Загрузка...</h1>}>
       <Switch>
         <Route exact path="/" component={App}/>
-        <Route path="/:folder/:id" component={Detailed}/>
+        <Route path="/:folderId/:id" component={Detailed}/>
         <Redirect to="/"/>
       </Switch>
     </Suspense>
