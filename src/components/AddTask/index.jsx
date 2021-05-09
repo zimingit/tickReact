@@ -9,7 +9,7 @@ import './AddTask.scss';
 const AddTask = ({ onAddTask }) => {
   const btnColor = '#5acab7'
   const [showField, setShowField] = useState(false)
-  const [taskText, setTaskText] = useState('')
+  const [taskName, setTaskName] = useState('')
 
   const debounceHideField = () => {
     setTimeout(() => setShowField(false), 500)
@@ -19,15 +19,15 @@ const AddTask = ({ onAddTask }) => {
     if (e.key === 'Enter') {
       handleAddTask()
     } else if (e.key === 'Escape') {
-      setTaskText('')
+      setTaskName('')
       setShowField(false)
     }
   }
   const handleAddTask = () => {
-    if (!taskText) return
-    const newTask = { text: taskText, completed: false, description: '' }
+    if (!taskName) return
+    const newTask = { name: taskName, completed: false, description: '' }
     onAddTask(newTask)
-    setTaskText('')
+    setTaskName('')
     setShowField(false)
   }
 
@@ -42,9 +42,9 @@ const AddTask = ({ onAddTask }) => {
         <div className="add-task__field">
           <Input  
             autofocus={true}
-            value={taskText}
+            value={taskName}
             onBlur={debounceHideField}
-            onInput={setTaskText}
+            onInput={setTaskName}
             onKeyUp={onKeyUp}
             placeholder="Введите описание и нажмите Enter"/>
 
