@@ -6,7 +6,7 @@ import setClass from '../../plugins/ClassNames.js'
 import './Folder.scss'
 import deleteIcon from '../../assets/icons/delete.svg'
 
-const ListItem = ({label, color, selected, handleDelFolder, onClick}) => {
+const Folder = ({id, label, color, selected, handleDelFolder, onClick}) => {
   // const testMultiClasses = setClass([
   //   ['arrayFirstClass', 'arraySecondClass'],
   //   [],
@@ -23,15 +23,14 @@ const ListItem = ({label, color, selected, handleDelFolder, onClick}) => {
     setDidMount(true)
     return () => setDidMount(false)
   }, [])
-
   const [isAccepted, setAccepted] = useState(false)
-  const classes = setClass(['folder', {selected}])
+  const classes = setClass(['folder', {selected : id === (selected || {}).id}])
   const getIcon = isAccepted ? null : deleteIcon
   const getDeleteLabel = isAccepted ? 'ok?' : null
 
   const handleDelete = (e) => {
     e.stopPropagation()
-    if (isAccepted) return handleDelFolder(label)
+    if (isAccepted) return handleDelFolder({id})
     setAccepted(true)
     setTimeout(() => {
       if (!didMount) return
@@ -39,10 +38,8 @@ const ListItem = ({label, color, selected, handleDelFolder, onClick}) => {
     }, 2000)
   }
 
-  const handleClick = () => onClick(label)
-
   return (
-    <li className={classes} onClick={handleClick}>
+    <li className={classes} onClick={onClick}>
       <Badge color={color}/>
       <span className="label">{label}</span>
       <div className="folder_delete">
@@ -52,4 +49,4 @@ const ListItem = ({label, color, selected, handleDelFolder, onClick}) => {
   );
 }
 
-export default ListItem;
+export default Folder;
