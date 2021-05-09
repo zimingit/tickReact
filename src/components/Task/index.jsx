@@ -37,7 +37,7 @@ const Task = ({ task, onCompleteTask, onDeleteTask = () => {}, onDetailedView = 
     <div className={classes}>
       <Checkbox value={task.completed} onChange={onCompletedChange}></Checkbox>
 
-      <p className="task__text">{task.text}</p>
+      <p className="task__text">{task.name}</p>
 
       
       <div className="task__view" onClick={onDetailedView}>
